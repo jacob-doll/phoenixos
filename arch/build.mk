@@ -14,18 +14,14 @@ CRT_OBJS= \
 
 KERNEL_SRCS+= \
 	$(wildcard arch/$(ARCH_TARGET)/kernel/*.c)
-# KERNEL_OBJS+= \
-# 	$(patsubst %.c, $(BUILD_DIR)/arch/$(ARCH_TARGET)/kernel/%.o, $(KERNEL_SRCS))
 
 OBJS+= \
 	$(BOOT_OBJS) \
-	$(CRT_OBJS) \
-	# $(KERNEL_OBJS)
+	$(CRT_OBJS) 
 
 SRCS+= \
-	$(BOOT_SRCS) \
-	# $(KERNEL_SRCS)
-
+	$(BOOT_SRCS) 
+	
 $(BUILD_DIR)/arch/$(ARCH_TARGET)/boot/%.o: arch/$(ARCH_TARGET)/boot/%.s
 	@mkdir -p $(@D)
 	@$(AS) -o $@ $^

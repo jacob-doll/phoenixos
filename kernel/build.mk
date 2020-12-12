@@ -14,4 +14,5 @@ $(BUILD_DIR)/kernel/%.o: kernel/%.c
 
 $(KERNEL_BIN): $(OBJS)
 	@mkdir -p $(@D)
-	@$(CC) -T arch/$(ARCH_TARGET)/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
+	# @$(CC) -T arch/$(ARCH_TARGET)/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
+	@$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary
