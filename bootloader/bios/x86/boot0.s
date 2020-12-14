@@ -1,11 +1,21 @@
 #define BIOS_STACK_ADDRESS 0x1000
 #define DISK_BUFFER 0x1800
 
+.code16
+.global _start
+_start:
+    ljmp $0, $init
+
+str_entry: .string "Phoenixos Bootloader\n"
+str_load_buffer: .string "Loading kernel to buffer\n"
+
 /**
- * 
+ * init --
+ *     
+ *     Entry point for BIOS MBR bootloader. Sets up segment
+ *     registers and stack. Prints a startup message.
  */
 .code16
-.global init
 init:
     cli
     xor %ax, %ax
@@ -17,7 +27,7 @@ init:
 
     mov %dl, (disk_drive)
 
-    mov $msg_real_mode, %si
+    mov $str_entry, %si
     call printfunc
 
     call load_kernel
@@ -30,7 +40,7 @@ init:
 
 .code16
 load_kernel:
-    mov $msg_load_kernel, %si
+    mov $str_load_buffer, %si
     call printfunc
 
     mov $DISK_BUFFER, %bx
@@ -77,11 +87,7 @@ entry:
     call DISK_BUFFER
     jmp .
 
-/// GLOBALS
-msg_real_mode: .string "Started in 16-bit Real Mode"
-msg_load_kernel: .string "Loading kernel into memory"
-
 disk_drive: .byte 0x0
 
-.fill 510-(.-init), 1, 0
+.fill 510-(.-_start), 1, 0
 .word 0xaa55

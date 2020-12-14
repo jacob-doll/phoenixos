@@ -11,4 +11,4 @@ $(BUILD_DIR)/bootloader/bios/x86/%.o: bootloader/bios/x86/%.S
 
 $(BOOTLOADER_BIN): $(BOOTLOADER_OBJS)
 	@mkdir -p $(@D)
-	@$(LD) -o $@ --oformat binary -e init -Ttext 0x7c00 $^
+	@$(LD) -o $@ --oformat binary -e _start -Ttext 0x7c00 $^
