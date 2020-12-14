@@ -9,8 +9,8 @@ BUILD_DIR=$(shell pwd)/build
 ARCH_TARGET=x86
 SYSROOT=$(shell pwd)/sysroot
 
-CC+= --sysroot=$(SYSROOT)
-CC+= -isystem=/usr/include
+KERNEL_FLAGS+= --sysroot=$(SYSROOT)
+KERNEL_FLAGS+= -isystem=/usr/include
 
 -include arch/build.mk
 -include kernel/build.mk

@@ -1,38 +1,41 @@
+#define BIOS_STACK_ADDRESS 0x1000
+#define DISK_BUFFER 0x1800
 
-.macro print msg
-    push %ax
-    mov \msg, %si
-    call printfunc
-    pop %ax
-.endm
-
-.equ kernel_offset, 0x1000
-
-/// INIT
+/**
+ * 
+ */
 .code16
 .global init
 init:
-    
-    mov $0x9000, %bp
+    cli
+    xor %ax, %ax
+    mov %ax, %ss
+    mov %ax, %ds
+    mov %ax, %es
+    mov $BIOS_STACK_ADDRESS, %bp
     mov %bp, %sp
 
-    print $msg_real_mode
+    mov %dl, (disk_drive)
+
+    mov $msg_real_mode, %si
+    call printfunc
 
     call load_kernel
     call protected
 
     jmp .
 
-.include "bootloader/bios/x86/print.inc"
 .include "bootloader/bios/x86/disk.inc"
 .include "bootloader/bios/x86/gdt.inc"
 
 .code16
 load_kernel:
-    print $msg_load_kernel
+    mov $msg_load_kernel, %si
+    call printfunc
 
-    mov $kernel_offset, %bx
+    mov $DISK_BUFFER, %bx
     mov $0x10, %dh
+    mov (disk_drive), %dl
     call disk_load
     ret
 
@@ -44,6 +47,16 @@ protected:
     or $0x1, %eax
     mov %eax, %cr0
     jmp $CODE_SEG,$init_pm
+
+printfunc:
+    lodsb
+    or %al, %al
+    jz .end
+    mov $0x0e, %ah
+    int $0x10
+    jmp printfunc
+.end:
+    ret
 
 .code32
 init_pm:
@@ -61,13 +74,14 @@ init_pm:
 
 .code32
 entry:
-    call kernel_offset
+    call DISK_BUFFER
     jmp .
 
 /// GLOBALS
-msg_real_mode: .ascii "Started in 16-bit Real Mode", "\x0a", "\x0d", "\0"
-msg_prot_mode: .ascii "Landed in 32-bit Protected Mode", "\x0a", "\x0d", "\0"
-msg_load_kernel: .ascii "Loading kernel into memory", "\x0a", "\x0d", "\0"
+msg_real_mode: .string "Started in 16-bit Real Mode"
+msg_load_kernel: .string "Loading kernel into memory"
+
+disk_drive: .byte 0x0
 
 .fill 510-(.-init), 1, 0
 .word 0xaa55

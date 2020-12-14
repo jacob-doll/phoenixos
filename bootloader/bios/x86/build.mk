@@ -1,13 +1,13 @@
 BOOTLOADER_SRCS= \
-	$(wildcard bootloader/bios/x86/*.s)
+	$(wildcard bootloader/bios/x86/*.S)
 BOOTLOADER_OBJS= \
-	$(patsubst %.s, $(BUILD_DIR)/%.o, $(BOOTLOADER_SRCS))
+	$(patsubst %.S, $(BUILD_DIR)/%.o, $(BOOTLOADER_SRCS))
 
 BOOTLOADER_BIN = $(BUILD_DIR)/boot.bin
 
-$(BUILD_DIR)/bootloader/bios/x86/%.o: bootloader/bios/x86/%.s
+$(BUILD_DIR)/bootloader/bios/x86/%.o: bootloader/bios/x86/%.S
 	@mkdir -p $(@D)
-	@$(AS) -o $@ $^
+	@$(CC) -c $^ -o $@
 
 $(BOOTLOADER_BIN): $(BOOTLOADER_OBJS)
 	@mkdir -p $(@D)

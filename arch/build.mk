@@ -32,4 +32,4 @@ $(BUILD_DIR)/arch/$(ARCH_TARGET)/crt/%.o: arch/$(ARCH_TARGET)/crt/%.s
 
 $(BUILD_DIR)/arch/$(ARCH_TARGET)/kernel/%.o: arch/$(ARCH_TARGET)/kernel/%.c
 	@mkdir -p $(@D)
-	@$(CC) -c $^ -o $@ -std=gnu99 -ffreestanding $(CFLAGS)
+	@$(CC) $(KERNEL_FLAGS) -c $^ -o $@ -std=gnu99 -ffreestanding $(CFLAGS)
