@@ -1,5 +1,5 @@
-#define BIOS_STACK_ADDRESS 0x1000
-#define DISK_BUFFER 0x1800
+#define BIOS_STACK_ADDRESS 0x9000
+#define DISK_BUFFER 0x1000
 
 .code16
 .global _start
@@ -7,7 +7,7 @@ _start:
     ljmp $0, $init
 
 str_entry: .string "Phoenixos Bootloader\n"
-str_load_buffer: .string "Loading kernel to buffer\n"
+str_error: .string "ERROR!\n"
 
 /**
  * init --
@@ -27,6 +27,10 @@ init:
 
     mov %dl, (disk_drive)
 
+    mov $0x2401, %ax
+    int $0x15
+    jc fatal_error
+
     mov $str_entry, %si
     call printfunc
 
@@ -40,11 +44,7 @@ init:
 
 .code16
 load_kernel:
-    mov $str_load_buffer, %si
-    call printfunc
-
     mov $DISK_BUFFER, %bx
-    mov $0x10, %dh
     mov (disk_drive), %dl
     call disk_load
     ret
@@ -57,6 +57,16 @@ protected:
     or $0x1, %eax
     mov %eax, %cr0
     jmp $CODE_SEG,$init_pm
+
+fatal_error:
+    pusha
+    push %si
+    mov $str_error, %si
+    call printfunc
+    pop %si
+    popa
+    cli
+    hlt
 
 printfunc:
     lodsb
