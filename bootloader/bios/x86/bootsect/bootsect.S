@@ -1,5 +1,6 @@
 #define BIOS_STACK_ADDRESS 0x9000
 #define DISK_BUFFER 0x1000
+#define NUM_SECTORS_READ 3
 
 .code16
 .global _start
@@ -35,22 +36,23 @@ init:
     call printfunc
 
     call load_kernel
-    call protected
+    call enter_protected
 
     jmp .
 
-.include "bootloader/bios/x86/disk.inc"
-.include "bootloader/bios/x86/gdt.inc"
+.include "bootloader/bios/x86/bootsect/disk.inc"
+.include "bootloader/bios/x86/bootsect/gdt.inc"
 
 .code16
 load_kernel:
     mov $DISK_BUFFER, %bx
+    mov $NUM_SECTORS_READ, %dh
     mov (disk_drive), %dl
     call disk_load
     ret
 
 .code16
-protected:
+enter_protected:
     cli
     lgdt (gdt_descriptor)
     mov %cr0, %eax

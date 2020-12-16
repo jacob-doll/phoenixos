@@ -7,6 +7,7 @@ CFLAGS=-O2 -Wall -Wextra
 
 BUILD_DIR=$(shell pwd)/build
 ARCH_TARGET=x86
+BOOT_TARGET=bios/$(ARCH_TARGET)
 SYSROOT=$(shell pwd)/sysroot
 
 KERNEL_FLAGS+= --sysroot=$(SYSROOT)

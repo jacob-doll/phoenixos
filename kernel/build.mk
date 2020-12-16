@@ -19,4 +19,4 @@ $(KERNEL_ELF): $(OBJS)
 	@$(CC) -T arch/$(ARCH_TARGET)/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
 
 $(KERNEL_BIN): $(KERNEL_ELF)
-	objcopy -O binary $^ $@
+	@objcopy -O binary $^ $@

@@ -1,14 +1,16 @@
-BOOTLOADER_SRCS= \
-	$(wildcard bootloader/bios/x86/*.S)
-BOOTLOADER_OBJS= \
-	$(patsubst %.S, $(BUILD_DIR)/%.o, $(BOOTLOADER_SRCS))
+BOOTSECT_SRC= \
+	bootloader/$(BOOT_TARGET)/bootsect/bootsect.S
+BOOTSECT_OBJ= \
+	$(patsubst %.S, $(BUILD_DIR)/%.o, $(BOOTSECT_SRC))
+BOOTSECT_INC= \
+	$(wildcard bootloader/$(BOOT_TARGET)/bootsect/*.inc)
 
 BOOTLOADER_BIN = $(BUILD_DIR)/boot.bin
 
-$(BUILD_DIR)/bootloader/bios/x86/%.o: bootloader/bios/x86/%.S
+$(BOOTSECT_OBJ): $(BOOTSECT_SRC) $(BOOTSECT_INC)
 	@mkdir -p $(@D)
-	@$(CC) -c $^ -o $@
+	@$(CC) -c $(BOOTSECT_SRC) -o $@
 
-$(BOOTLOADER_BIN): $(BOOTLOADER_OBJS)
+$(BOOTLOADER_BIN): $(BOOTSECT_OBJ)
 	@mkdir -p $(@D)
 	@$(LD) -o $@ --oformat binary -e _start -Ttext 0x7c00 $^
