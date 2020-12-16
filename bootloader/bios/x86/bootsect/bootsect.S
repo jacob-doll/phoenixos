@@ -1,6 +1,10 @@
 #define BIOS_STACK_ADDRESS 0x9000
 #define DISK_BUFFER 0x1000
 #define NUM_SECTORS_READ 3
+#define SECTOR_SIZE 512
+#define DISK_BUFFER_SIZE (NUM_SECTORS_READ * SECTOR_SIZE)
+#define NUM_COPIES 384 // (DISK_BUFFER_SIZE / 4)
+#define KERNEL_BUFFER 0x100000
 
 .code16
 .global _start
@@ -92,11 +96,16 @@ init_pm:
     mov $0x90000, %ebp
     mov %ebp, %esp
 
+    mov $DISK_BUFFER, %esi
+    mov $KERNEL_BUFFER, %edi
+    mov $NUM_COPIES, %ecx
+    rep movsd
+
     call entry
 
 .code32
 entry:
-    call DISK_BUFFER
+    call KERNEL_BUFFER
     jmp .
 
 disk_drive: .byte 0x0

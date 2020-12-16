@@ -13,7 +13,7 @@ SYSROOT=$(shell pwd)/sysroot
 KERNEL_FLAGS+= --sysroot=$(SYSROOT)
 KERNEL_FLAGS+= -isystem=/usr/include
 
--include arch/build.mk
+# -include arch/build.mk
 -include kernel/build.mk
 -include bootloader/bios/x86/build.mk
 
