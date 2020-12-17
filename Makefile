@@ -32,26 +32,18 @@ image: $(BOOTLOADER_BIN) $(KERNEL_BIN)
 
 
 list-src:
-	echo $(SRCS)
-	echo $(OBJS)
+	@for src in $(SRCS) ; do \
+		echo $$src; \
+	done
 
-# grub: all
-# 	mkdir -p isodir/boot/grub
-# 	cp $(KERNEL_BIN) isodir/boot/kernel.bin
-# 	cp grub.cfg isodir/boot/grub/grub.cfg
-# 	grub-mkrescue -o jacobos.iso isodir
-
-# qemu: grub
-# 	qemu-system-i386.exe -cdrom jacobos.iso
+list-obj:
+	@for obj in $(OBJS) ; do \
+		echo $$obj; \
+	done
 
 qemu: image
 	qemu-system-i386.exe -boot c build/image.bin -gdb tcp::26000
 
 clean:
-	rm -rf $(BUILD_DIR)
-
-deep-clean: clean
-	rm -rf isodir
-	rm -rf sysroot
-	rm -rf $(BUILD_DIR)
-	rm jacobos.iso
+	rm -rf build/
+	rm -rf sysroot/

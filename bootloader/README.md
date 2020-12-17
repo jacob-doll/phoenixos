@@ -16,3 +16,4 @@ The phoenixos Bootloader is heavily work-in-progress and only supports the kerne
 - Get graphics information from bios
 - ELF header parsing
 - Provide collected information to kernel
+- Multistage bootloader

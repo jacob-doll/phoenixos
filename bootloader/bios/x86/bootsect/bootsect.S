@@ -39,6 +39,7 @@ init:
     mov $str_entry, %si
     call printfunc
 
+    call memory_map
     call load_kernel
     call enter_protected
 
@@ -46,6 +47,7 @@ init:
 
 .include "bootloader/bios/x86/bootsect/disk.inc"
 .include "bootloader/bios/x86/bootsect/gdt.inc"
+.include "bootloader/bios/x86/bootsect/memory.inc"
 
 .code16
 load_kernel:
@@ -105,6 +107,7 @@ init_pm:
 
 .code32
 entry:
+    mov $mmap_buf, %eax
     call KERNEL_BUFFER
     jmp .
 

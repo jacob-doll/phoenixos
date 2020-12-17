@@ -1,7 +1,7 @@
 BOOT_SRCS= \
 	$(wildcard kernel/arch/$(ARCH_TARGET)/boot/*.S)
 BOOT_OBJS= \
-	$(patsubst %.s, $(BUILD_DIR)/%.o, $(BOOT_SRCS))
+	$(patsubst %.S, $(BUILD_DIR)/%.o, $(BOOT_SRCS))
 
 CRTBEGIN_OBJ:= \
 	$(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
@@ -39,14 +39,12 @@ HEADERS+= $(shell pwd)/kernel/include/.
 KERNEL_ELF = $(BUILD_DIR)/kernel.elf
 KERNEL_BIN = $(BUILD_DIR)/kernel.bin
 
-$(BUILD_DIR)/kernel/arch/$(ARCH_TARGET)/boot/%.o: kernel/arch/$(ARCH_TARGET)/boot/%.s
+$(BUILD_DIR)/kernel/arch/$(ARCH_TARGET)/boot/%.o: kernel/arch/$(ARCH_TARGET)/boot/%.S
 	@mkdir -p $(@D)
-	@#$(AS) -o $@ $^
 	$(CC) -c $^ -o $@
 
 $(BUILD_DIR)/kernel/arch/$(ARCH_TARGET)/crt/%.o: kernel/arch/$(ARCH_TARGET)/crt/%.s
 	@mkdir -p $(@D)
-	@#$(AS) -o $@ $^
 	$(CC) -c $^ -o $@
 
 $(BUILD_DIR)/kernel/arch/$(ARCH_TARGET)/kernel/%.o: kernel/arch/$(ARCH_TARGET)/kernel/%.c
@@ -63,7 +61,6 @@ $(BUILD_DIR)/kernel/%.o: kernel/%.c
 
 $(KERNEL_ELF): $(OBJS)
 	@mkdir -p $(@D) 
-	@#$(LD) -o $@ -Ttext 0x1800 $^ --oformat binary
 	$(CC) -T kernel/arch/$(ARCH_TARGET)/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
 
 $(KERNEL_BIN): $(KERNEL_ELF)
