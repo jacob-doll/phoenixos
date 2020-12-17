@@ -28,7 +28,8 @@ _start:
     Global constructors
     */
 
-    call kernel_main
+    .extern arch_main
+    call arch_main
 
     cli
 1:  hlt

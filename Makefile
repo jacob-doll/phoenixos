@@ -28,12 +28,12 @@ kernel: headers $(KERNEL_BIN)
 boot: $(BOOTLOADER_BIN)
 
 image: $(BOOTLOADER_BIN) $(KERNEL_BIN)
-	@cat $^ > $(BUILD_DIR)/image.bin
+	cat $^ > $(BUILD_DIR)/image.bin
 
 
 list-src:
-	@echo $(SRCS)
-	@echo $(OBJS)
+	echo $(SRCS)
+	echo $(OBJS)
 
 # grub: all
 # 	mkdir -p isodir/boot/grub

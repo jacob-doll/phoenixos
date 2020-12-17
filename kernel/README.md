@@ -17,6 +17,7 @@ The phoenixos Kernel is fundamentally lacking at the moment. All you can realist
 
 ## TODO
 
+- Paging/Memory Management
 - Implement a stack smash protector
 - Multithreading support
 - Keyboard support
