@@ -27,9 +27,10 @@ kernel: headers $(KERNEL_BIN)
 
 boot: $(BOOTLOADER_BIN)
 
-image: $(BOOTLOADER_BIN) $(KERNEL_BIN)
-	cat $^ > $(BUILD_DIR)/image.bin
-
+image: boot kernel
+	dd if=/dev/zero of=$(BUILD_DIR)/disk.img bs=512 count=16
+	dd if=$(BUILD_DIR)/boot.bin of=$(BUILD_DIR)/disk.img bs=512 conv=notrunc
+	dd if=$(BUILD_DIR)/kernel.bin of=$(BUILD_DIR)/disk.img bs=512 obs=512 seek=1 conv=notrunc
 
 list-src:
 	@for src in $(SRCS) ; do \
@@ -42,7 +43,7 @@ list-obj:
 	done
 
 qemu: image
-	qemu-system-i386.exe -boot c build/image.bin -gdb tcp::26000
+	qemu-system-i386.exe -boot c build/disk.img -gdb tcp::26000
 
 clean:
 	rm -rf build/

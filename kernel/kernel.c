@@ -2,11 +2,9 @@
 #include <stddef.h>
 #include <stdint.h>
  
-#include <kernel/tty.h>
+#include <kernel/kprintf.h>
 
 void kernel_main(void) 
 {
- 
-	/* Newline support is left as an exercise. */
-	terminal_writestring("Hello, kernel World!\n");
+ 	kprintf("Hello, kernel World!\n");
 }
