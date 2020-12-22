@@ -41,11 +41,11 @@ KERNEL_BIN = $(BUILD_DIR)/kernel.bin
 
 $(BUILD_DIR)/kernel/arch/$(ARCH_TARGET)/boot/%.o: kernel/arch/$(ARCH_TARGET)/boot/%.S
 	@mkdir -p $(@D)
-	$(CC) -c $^ -o $@
+	$(CC) $(KERNEL_FLAGS) -c $^ -o $@ -std=gnu99 -ffreestanding $(CFLAGS)
 
 $(BUILD_DIR)/kernel/arch/$(ARCH_TARGET)/crt/%.o: kernel/arch/$(ARCH_TARGET)/crt/%.s
 	@mkdir -p $(@D)
-	$(CC) -c $^ -o $@
+	$(CC) $(KERNEL_FLAGS) -c $^ -o $@ -std=gnu99 -ffreestanding $(CFLAGS)
 
 $(BUILD_DIR)/kernel/arch/$(ARCH_TARGET)/kernel/%.o: kernel/arch/$(ARCH_TARGET)/kernel/%.c
 	@mkdir -p $(@D)

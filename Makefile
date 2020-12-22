@@ -42,8 +42,11 @@ list-obj:
 		echo $$obj; \
 	done
 
-qemu: image
-	qemu-system-i386.exe -boot c build/disk.img -gdb tcp::26000
+run: image
+	qemu-system-i386.exe -boot c build/disk.img
+
+debug: image
+	qemu-system-i386.exe -boot c build/disk.img -S -gdb tcp::26000
 
 clean:
 	rm -rf build/
