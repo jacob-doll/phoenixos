@@ -15,6 +15,10 @@ The phoenixos Kernel is fundamentally lacking at the moment. All you can realist
 - Print null-terminated strings to a VGA buffer
 - Global constructors
 
+# Memory Map
+
+## Physical
+
 ## TODO
 
 - Paging/Memory Management

@@ -1,5 +1,5 @@
-#ifndef ARCH_I386_GDT_H
-#define ARCH_I386_GDT_H
+#ifndef ARCH_X86_GDT_H
+#define ARCH_X86_GDT_H
 
 #include <stdint.h>
 
@@ -34,8 +34,6 @@ typedef struct tss_entry {
     uint32_t _[23];
 } __attribute__((packed)) tss_entry_t;
 
-// gdt_entry_t create_gdt_entry(uint32_t base, uint32_t limit, uint8_t access, uint8_t flags);
-
 void init_gdt(void);
 
-#endif // ARCH_I386_GDT_H
+#endif // ARCH_X86_GDT_H

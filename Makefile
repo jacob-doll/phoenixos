@@ -5,10 +5,12 @@ LD=$(TARGET)-ld
 
 CFLAGS=-O2 -Wall -Wextra
 
-BUILD_DIR=$(shell pwd)/build
 ARCH_TARGET=x86
 BOOT_TARGET=bios/$(ARCH_TARGET)
 SYSROOT=$(shell pwd)/sysroot
+
+BUILD_DIR=$(shell pwd)/build
+ARCH_DIR=kernel/arch/$(ARCH_TARGET)
 
 KERNEL_FLAGS+= --sysroot=$(SYSROOT)
 KERNEL_FLAGS+= -isystem=/usr/include
@@ -28,7 +30,7 @@ kernel: headers $(KERNEL_BIN)
 boot: $(BOOTLOADER_BIN)
 
 image: boot kernel
-	dd if=/dev/zero of=$(BUILD_DIR)/disk.img bs=512 count=16
+	dd if=/dev/zero of=$(BUILD_DIR)/disk.img bs=512 count=20
 	dd if=$(BUILD_DIR)/boot.bin of=$(BUILD_DIR)/disk.img bs=512 conv=notrunc
 	dd if=$(BUILD_DIR)/kernel.bin of=$(BUILD_DIR)/disk.img bs=512 obs=512 seek=1 conv=notrunc
 

@@ -27,10 +27,12 @@ SECTIONS
 	{
 		*(.text)
 	}
+	_kernel_text_end = .;
 	.rodata ALIGN (4K) : AT (ADDR (.rodata) - 0xC0000000)
 	{
 		*(.rodata)
 	}
+	_kernel_rodata_end = .;
 	.data ALIGN (4K) : AT (ADDR (.data) - 0xC0000000)
 	{
 		*(.data)
