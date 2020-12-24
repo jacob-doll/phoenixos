@@ -27,7 +27,7 @@ _start:
 	movl $1023, %ecx
 
 1:
-	cmpl $PHYSICAL_ADDR(_kernel_end), %esi
+	cmpl $PHYSICAL_ADDR(_kend), %esi
 	jge 3f
 
 	movl %esi, %edx

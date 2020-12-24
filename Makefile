@@ -14,8 +14,10 @@ ARCH_DIR=kernel/arch/$(ARCH_TARGET)
 
 KERNEL_FLAGS+= --sysroot=$(SYSROOT)
 KERNEL_FLAGS+= -isystem=/usr/include
+KERNEL_FLAGS+= -D_KERNEL_VERBOSE
 
-# -include arch/build.mk
+IMAGE=$(BUILD_DIR)/disk.img
+
 -include kernel/build.mk
 -include bootloader/bios/x86/build.mk
 
@@ -29,10 +31,12 @@ kernel: headers $(KERNEL_BIN)
 
 boot: $(BOOTLOADER_BIN)
 
-image: boot kernel
-	dd if=/dev/zero of=$(BUILD_DIR)/disk.img bs=512 count=20
-	dd if=$(BUILD_DIR)/boot.bin of=$(BUILD_DIR)/disk.img bs=512 conv=notrunc
-	dd if=$(BUILD_DIR)/kernel.bin of=$(BUILD_DIR)/disk.img bs=512 obs=512 seek=1 conv=notrunc
+image: $(IMAGE)
+
+$(IMAGE): boot kernel
+	dd if=/dev/zero of=$(IMAGE) bs=512 count=20
+	dd if=$(BUILD_DIR)/boot.bin of=$(IMAGE) bs=512 conv=notrunc
+	dd if=$(BUILD_DIR)/kernel.bin of=$(IMAGE) bs=512 obs=512 seek=1 conv=notrunc
 
 list-src:
 	@for src in $(SRCS) ; do \
@@ -44,10 +48,10 @@ list-obj:
 		echo $$obj; \
 	done
 
-run: image
+run: $(IMAGE) all
 	qemu-system-i386.exe -boot c build/disk.img
 
-debug: image
+debug: $(IMAGE) all
 	qemu-system-i386.exe -boot c build/disk.img -S -gdb tcp::26000
 
 clean:

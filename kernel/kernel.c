@@ -6,5 +6,7 @@
 
 void kernel_main(void) 
 {
- 	kprintf("Hello, kernel World!\n");
+	for (int _ = 0; _ < 20; _ ++) {
+ 		kprintf("Hello, kernel World!\n");
+	}
 }

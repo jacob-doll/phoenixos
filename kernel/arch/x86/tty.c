@@ -1,9 +1,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-// #include <string.h>
 
 #include <kernel/tty.h>
+#include <kernel/mem_utils.h>
 
 #include "vga.h"
 
@@ -34,8 +34,18 @@ void terminal_setcolor(uint8_t color) {
 }
 
 void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y) {
-	const size_t index = y * VGA_WIDTH + x;
-	terminal_buffer[index] = vga_entry(c, color);
+	if (y == VGA_HEIGHT) {
+		size_t i;
+		for (i = 1; i < VGA_HEIGHT; i++) {
+			memcpy(terminal_buffer + (i-1) * VGA_WIDTH,
+				   terminal_buffer + (i) * VGA_WIDTH,
+				   VGA_WIDTH * 2);
+		}
+		terminal_row = VGA_HEIGHT - 1;
+	} else {
+		const size_t index = y * VGA_WIDTH + x;
+		terminal_buffer[index] = vga_entry(c, color);
+	}
 }
 
 void terminal_putchar(char c) {
@@ -68,3 +78,4 @@ size_t strlen(const char* str) {
 void terminal_writestring(const char* data) {
 	terminal_write(data, strlen(data));
 }
+ 

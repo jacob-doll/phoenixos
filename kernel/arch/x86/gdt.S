@@ -1,5 +1,3 @@
-#include <kernel/memory.h>
-
 .section .text
 .global load_gdt
 .type load_gdt, @function
