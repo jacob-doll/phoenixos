@@ -1,5 +1,5 @@
-#ifndef ARCH_X86_PAGING_H
-#define ARCH_X86_PAGING_H
+#ifndef _ARCH_X86_PAGING_H
+#define _ARCH_X86_PAGING_H
 
 #define PAGE_PRESENT 0x1
 #define PAGE_WRITE 0x2
@@ -41,4 +41,4 @@ void map_kernel();
 
 #endif // __ASSEMBLER__
 
-#endif // ARCH_X86_PAGING_H
+#endif // _ARCH_X86_PAGING_H

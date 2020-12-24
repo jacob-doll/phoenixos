@@ -15,9 +15,12 @@ The phoenixos Kernel is fundamentally lacking at the moment. All you can realist
 - Print null-terminated strings to a VGA buffer
 - Global constructors
 
-# Memory Map
+## Memory Map
 
-## Physical
+| Memory Range            | Type   |
+| :---------------------- | :----- |
+| 0x00000000 - 0xBFFFFFFF | User   |
+| 0xC0000000 - 0xFFFFFFFF | Kernel |
 
 ## TODO
 

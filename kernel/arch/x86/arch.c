@@ -7,6 +7,7 @@
 #include <kernel/memory.h>
 
 #include "gdt.h"
+#include "idt.h"
 #include "paging.h"
 
 extern void kernel_main(void);
@@ -29,7 +30,14 @@ void arch_main(uintptr_t mem_info)
 	init_gdt();
 	kprintf("GDT initialized!\n");
 
+	init_idt();
+	kprintf("IDT initialized!\n");
+
+	__asm__ __volatile__("int $2");
+    __asm__ __volatile__("int $3");
+
 	map_kernel();
+	kprintf("Kernel Mapped\n");
 
     kernel_main();
 }

@@ -7,7 +7,7 @@ extern void load_gdt(uint32_t);
 static gdt_entry_t gdt[GDT_NUM_ENTRIES];
 
 static gdt_descriptor_t gdtr = {
-    .size = sizeof(struct gdt_entry) * GDT_NUM_ENTRIES,
+    .size = sizeof(struct gdt_entry) * GDT_NUM_ENTRIES - 1,
     .offset = (uint32_t)&gdt[0],
 };
 
@@ -38,5 +38,6 @@ void init_gdt(void) {
     gdt[4] = create_gdt_entry(0, 0xffffffff, GDT_USER_DATA, GDT_FLAGS);
     gdt[5] = create_gdt_entry((uint32_t)&tss, (uint32_t)sizeof(tss_entry_t), TSS_SEGMENT, TSS_FLAGS);
 
-    load_gdt((uint32_t)&gdtr);
+    __asm__ __volatile__("lgdt (%0)" : : "r" (&gdtr));
+    __asm__ __volatile__("mov $0x28, %ax; ltr %ax");
 }

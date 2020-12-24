@@ -1,5 +1,5 @@
-#ifndef ARCH_X86_GDT_H
-#define ARCH_X86_GDT_H
+#ifndef _ARCH_X86_GDT_H
+#define _ARCH_X86_GDT_H
 
 #include <stdint.h>
 
@@ -36,4 +36,4 @@ typedef struct tss_entry {
 
 void init_gdt(void);
 
-#endif // ARCH_X86_GDT_H
+#endif // _ARCH_X86_GDT_H
