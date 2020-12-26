@@ -1,5 +1,6 @@
 #include "idt.h"
 #include "interrupts.h"
+#include "ports.h"
 
 #define IDT_NUM_ENTRIES 256
 
@@ -44,6 +45,34 @@ void init_idt(void) {
     idt[29] = IDT_ENTRY((uint32_t)isr29, 0x8, IDT_GATE);
     idt[30] = IDT_ENTRY((uint32_t)isr30, 0x8, IDT_GATE);
     idt[31] = IDT_ENTRY((uint32_t)isr31, 0x8, IDT_GATE);
+
+    port_byte_out(0x20, 0x11);
+    port_byte_out(0xA0, 0x11);
+    port_byte_out(0x21, 0x20);
+    port_byte_out(0xA1, 0x28);
+    port_byte_out(0x21, 0x04);
+    port_byte_out(0xA1, 0x02);
+    port_byte_out(0x21, 0x01);
+    port_byte_out(0xA1, 0x01);
+    port_byte_out(0x21, 0x0);
+    port_byte_out(0xA1, 0x0);
+
+    idt[32] = IDT_ENTRY((uint32_t)irq0, 0x8, IDT_GATE);
+    idt[33] = IDT_ENTRY((uint32_t)irq1, 0x8, IDT_GATE);
+    idt[34] = IDT_ENTRY((uint32_t)irq2, 0x8, IDT_GATE);
+    idt[35] = IDT_ENTRY((uint32_t)irq3, 0x8, IDT_GATE);
+    idt[36] = IDT_ENTRY((uint32_t)irq4, 0x8, IDT_GATE);
+    idt[37] = IDT_ENTRY((uint32_t)irq5, 0x8, IDT_GATE);
+    idt[38] = IDT_ENTRY((uint32_t)irq6, 0x8, IDT_GATE);
+    idt[39] = IDT_ENTRY((uint32_t)irq7, 0x8, IDT_GATE);
+    idt[40] = IDT_ENTRY((uint32_t)irq8, 0x8, IDT_GATE);
+    idt[41] = IDT_ENTRY((uint32_t)irq9, 0x8, IDT_GATE);
+    idt[42] = IDT_ENTRY((uint32_t)irq10, 0x8, IDT_GATE);
+    idt[43] = IDT_ENTRY((uint32_t)irq11, 0x8, IDT_GATE);
+    idt[44] = IDT_ENTRY((uint32_t)irq12, 0x8, IDT_GATE);
+    idt[45] = IDT_ENTRY((uint32_t)irq13, 0x8, IDT_GATE);
+    idt[46] = IDT_ENTRY((uint32_t)irq14, 0x8, IDT_GATE);
+    idt[47] = IDT_ENTRY((uint32_t)irq15, 0x8, IDT_GATE);
     
     __asm__ __volatile__("lidtl (%0)" : : "r" (&idtr)); 
 }

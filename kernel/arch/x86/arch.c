@@ -8,6 +8,7 @@
 
 #include "gdt.h"
 #include "idt.h"
+#include "interrupts.h"
 #include "paging.h"
 
 extern void kernel_main(void);
@@ -16,25 +17,22 @@ void arch_main(uintptr_t mem_info)
 {
 	terminal_initialize();
 	kprintf("Hello, arch World!\n");
-	// uint32_t size = *((uint32_t*)mem_info);
-	// mem_info += 0x0004;
-	// while (size > 0) {
-	// 	mmap_entry_t entry = (*((mmap_entry_t*)mem_info));
-	// 	kprintf("base: %x%x ", entry.base_hi, entry.base_lo);
-	// 	kprintf("length: %x%x ", entry.length_hi, entry.length_lo);
-	// 	kprintf("type: %u\n", entry.type);
-	// 	--size;
-	// 	mem_info += sizeof(mmap_entry_t);
-	// }
+	uint32_t size = *((uint32_t*)mem_info);
+	mem_info += 0x0004;
+	while (size > 0) {
+		mmap_entry_t entry = (*((mmap_entry_t*)mem_info));
+		kprintf("base: %x%x ", entry.base_hi, entry.base_lo);
+		kprintf("length: %x%x ", entry.length_hi, entry.length_lo);
+		kprintf("type: %u\n", entry.type);
+		--size;
+		mem_info += sizeof(mmap_entry_t);
+	}
 
 	init_gdt();
 	kprintf("GDT initialized!\n");
 
 	init_idt();
 	kprintf("IDT initialized!\n");
-
-	__asm__ __volatile__("int $2");
-    __asm__ __volatile__("int $3");
 
 	map_kernel();
 	kprintf("Kernel Mapped\n");

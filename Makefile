@@ -34,7 +34,7 @@ boot: $(BOOTLOADER_BIN)
 image: $(IMAGE)
 
 $(IMAGE): boot kernel
-	dd if=/dev/zero of=$(IMAGE) bs=512 count=20
+	dd if=/dev/zero of=$(IMAGE) bs=512 count=32
 	dd if=$(BUILD_DIR)/boot.bin of=$(IMAGE) bs=512 conv=notrunc
 	dd if=$(BUILD_DIR)/kernel.bin of=$(IMAGE) bs=512 obs=512 seek=1 conv=notrunc
 

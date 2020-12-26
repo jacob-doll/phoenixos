@@ -11,6 +11,7 @@ The phoenixos Bootloader is heavily work-in-progress and only supports the kerne
 
 ## TODO
 
+- Load sectors dynamically
 - Locate kernel dynamically instead of statically defining location
 - Get memory map from BIOS
 - Get graphics information from bios
