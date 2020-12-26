@@ -5,6 +5,7 @@
 #include <kernel/tty.h>
 #include <kernel/kprintf.h>
 #include <kernel/memory.h>
+#include <kernel/keyboard.h>
 
 #include "gdt.h"
 #include "idt.h"
@@ -37,5 +38,10 @@ void arch_main(uintptr_t mem_info)
 	map_kernel();
 	kprintf("Kernel Mapped\n");
 
-    kernel_main();
+	init_keyboard();
+
+	asm volatile("sti");
+	// asm volatile("int $33");
+
+    // kernel_main();
 }
