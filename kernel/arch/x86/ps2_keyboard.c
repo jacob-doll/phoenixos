@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <stdbool.h>
 #include <kernel/keyboard.h>
 #include <kernel/kprintf.h>
 
@@ -7,7 +7,7 @@
 
 static void keyboard_callback(registers_t regs) {
     uint8_t scancode = port_byte_in(0x60);
-    kprintf("keyboard scancode: %x\n", scancode);
+    kprintf("key_callback:\n");
 }
 
 void init_keyboard() {
