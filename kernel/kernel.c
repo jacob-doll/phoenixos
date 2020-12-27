@@ -7,4 +7,5 @@
 void kernel_main(void) 
 {
  	kprintf("Hello, kernel World!\n");
+	init_keyboard();
 }

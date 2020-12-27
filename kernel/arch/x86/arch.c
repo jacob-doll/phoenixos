@@ -11,6 +11,7 @@
 #include "idt.h"
 #include "interrupts.h"
 #include "paging.h"
+#include "pit.h"
 
 extern void kernel_main(void);
 
@@ -38,10 +39,7 @@ void arch_main(uintptr_t mem_info)
 	map_kernel();
 	kprintf("Kernel Mapped\n");
 
-	init_keyboard();
-
 	asm volatile("sti");
-	// asm volatile("int $33");
 
-    // kernel_main();
+    kernel_main();
 }

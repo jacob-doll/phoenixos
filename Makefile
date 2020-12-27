@@ -49,7 +49,7 @@ list-obj:
 	done
 
 run: $(IMAGE) all
-	qemu-system-i386.exe -display sdl -boot c build/disk.img
+	qemu-system-i386.exe -monitor stdio -display sdl -boot c build/disk.img
 
 debug: $(IMAGE) all
 	qemu-system-i386.exe -display sdl -boot c build/disk.img -S -gdb tcp::26000
