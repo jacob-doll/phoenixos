@@ -52,6 +52,8 @@ init:
 .code16
 load_kernel:
     mov $DISK_BUFFER, %bx
+    mov %bx, %es
+    xor %bx, %bx
     mov $NUM_SECTORS_READ, %dh
     mov (disk_drive), %dl
     call disk_load
@@ -98,7 +100,7 @@ init_pm:
     mov $0x90000, %ebp
     mov %ebp, %esp
 
-    mov $DISK_BUFFER, %esi
+    mov $0x10000, %esi
     mov $KERNEL_BUFFER, %edi
     mov $NUM_COPIES, %ecx
     rep movsd
