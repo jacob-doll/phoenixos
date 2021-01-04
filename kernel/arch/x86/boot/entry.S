@@ -57,7 +57,7 @@ _start:
 	mov $stack_top, %esp
 
     .extern arch_main
-	push $0x8100
+	push $0x5100
     call arch_main
 
     cli

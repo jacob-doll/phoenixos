@@ -11,10 +11,10 @@ The phoenixos Bootloader is heavily work-in-progress and only supports the kerne
 
 ## TODO
 
-- Load sectors dynamically
-- Locate kernel dynamically instead of statically defining location
-- Get memory map from BIOS
+- Load sectors dynamically (done)
+- Locate kernel dynamically instead of statically defining location (done, through elf header)
+- Get memory map from BIOS (done)
 - Get graphics information from bios
-- ELF header parsing
+- ELF header parsing (done)
 - Provide collected information to kernel
-- Multistage bootloader
+- Multistage bootloader (in progress)

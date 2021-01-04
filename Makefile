@@ -36,7 +36,7 @@ image: $(IMAGE)
 $(IMAGE): boot kernel
 	dd if=/dev/zero of=$(IMAGE) bs=512 count=32
 	dd if=$(BUILD_DIR)/boot.bin of=$(IMAGE) bs=512 conv=notrunc
-	dd if=$(BUILD_DIR)/kernel.bin of=$(IMAGE) bs=512 obs=512 seek=1 conv=notrunc
+	dd if=$(BUILD_DIR)/kernel.elf of=$(IMAGE) bs=512 obs=512 seek=6 conv=notrunc
 
 list-src:
 	@for src in $(SRCS) ; do \
@@ -52,7 +52,13 @@ run: $(IMAGE) all
 	qemu-system-i386.exe -monitor stdio -display sdl -boot c build/disk.img
 
 debug: $(IMAGE) all
-	qemu-system-i386.exe -display sdl -boot c build/disk.img -S -gdb tcp::26000
+	qemu-system-i386.exe -monitor stdio -display sdl -boot c build/disk.img -S -gdb tcp::26000
+
+run-boot: $(IMAGE) all
+	qemu-system-i386.exe -monitor stdio -display sdl -boot c build/boot.bin
+
+debug-boot: boot
+	qemu-system-i386.exe -monitor stdio -display sdl -boot c build/boot.bin -S -gdb tcp::26000
 
 clean:
 	rm -rf build/
