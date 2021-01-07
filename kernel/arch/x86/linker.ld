@@ -1,7 +1,6 @@
-ENTRY(_start)
-
 SECTIONS
 {
+	start = 0x00100000;
     . = 0xC0100000;
 	_kbegin = .;
 	.text ALIGN (4K) : AT (ADDR (.text) - 0xC0000000)

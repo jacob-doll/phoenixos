@@ -6,26 +6,35 @@
 
 .code16
 .global _start
+.section .bootsect.text
 _start:
-    cli
     ljmp $0, $init
+.fill 8-(.-_start), 1, 0
+
+bi_PrimaryVolumeDescriptor: .long  0   
+bi_BootFileLocation: .long 0
+bi_BootFileLength: .long 0
+bi_Checksum: .long 0
+bi_Reserved: .fill 40, 1, 0
 
 init:
+    cli
     xor %ax, %ax
     mov %ax, %ss
     mov %ax, %ds
     mov %ax, %es
     mov 0x9000, %sp
     sti
-
+    
     mov %dl, (disk_drive)
 
 
     mov (disk_drive), %dl
-    mov $stage2_entry, %bx
-    mov (stage2_size), %ecx
+    mov $0x7C00, %bx
+    mov (bi_BootFileLocation), %eax
+    mov (bi_BootFileLength), %ecx
     call disk_load
-
+    
     call memory_map
 
     cli
@@ -52,12 +61,16 @@ init_pm:
     mov $0x90000, %ebp
     mov %ebp, %esp
 
-    call stage2_entry
+    .extern boot_main
+    call boot_main
+
+    jmp .
 
 /**
  *  IN:
  *  DL = drive
  *  ES = buffer segment
+ *  EAX = start lba
  *  BX = buffer offset
  *  ECX = bytes to load
  */
@@ -71,7 +84,7 @@ disk_load:
     movw $0x01,        2(%si)   // number of sectors to read
     movw %bx,          4(%si)   // offset
     movw %es,          6(%si)   // segment    
-    movl $0x00000001,  8(%si)   // start sector
+    movl %eax,         8(%si)   // start sector
     movl $0x00000000, 12(%si)   // (cont. )
     
     push %dx
@@ -81,7 +94,7 @@ disk_load:
     shr $16, %ecx
     mov %cx, %dx
     xor %cx, %cx
-    mov $512, %ebx
+    mov $2048, %ebx
     div %ebx
     test %dx, %dx
     setnz %cl
@@ -95,7 +108,7 @@ disk_load:
     int $0x13
     jc fatal_error
 
-    addw $512, 4(%si)
+    addw $2048, 4(%si)
     incw 8(%si)
     adcw $0, 12(%si)
 
@@ -169,10 +182,6 @@ gdt_end:
 gdt_descriptor:
     .word gdt_end - gdt_start - 1
     .long gdt_start
-
-// Stage two data
-.fill 0x1AC-(.-_start), 1, 0
-stage2_size: .long 0
 
 .fill 510-(.-_start), 1, 0
 .word 0xaa55

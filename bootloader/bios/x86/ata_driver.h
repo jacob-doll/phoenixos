@@ -15,7 +15,7 @@
 #define ATA_IO_REG_LBA2(x)        (x + 0x5)
 #define ATA_IO_REG_DRV_SEL(x)     (x + 0x6)
 #define ATA_IO_REG_STATUS(x)      (x + 0x7)
-#define ATA_IO_REG_COM(x)         (x + 0x7)
+#define ATA_IO_REG_CMD(x)         (x + 0x7)
 
 #define ATA_CTL_REG_ALT_STATUS 0x0
 #define ATA_CTL_REG_DEV_CTL    0x0
@@ -36,6 +36,6 @@ typedef struct ata_device {
 } ata_device_t;
 
 int ata_detect_device(ata_device_t *dev);
-int ata_read_sector(ata_device_t *dev, uint32_t lba, uint8_t *buffer);
+int atapi_read_sector(ata_device_t *dev, uint32_t lba, uint8_t *buffer);
 
 #endif // _BOOT_ATA_DRIVER_H

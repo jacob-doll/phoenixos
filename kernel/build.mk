@@ -36,8 +36,7 @@ SRCS+= \
 	
 HEADERS+= $(shell pwd)/kernel/include/.
 
-KERNEL_ELF = $(BUILD_DIR)/kernel.elf
-KERNEL_BIN = $(BUILD_DIR)/kernel.bin
+KERNEL_BIN = $(BUILD_DIR)/kernel.sys
 
 $(BUILD_DIR)/$(ARCH_DIR)/boot/%.o: $(ARCH_DIR)/boot/%.S
 	@mkdir -p $(@D)
@@ -59,9 +58,6 @@ $(BUILD_DIR)/kernel/%.o: kernel/%.c
 	@mkdir -p $(@D)
 	$(CC) $(KERNEL_FLAGS) -c $< -o $@ -std=gnu99 -ffreestanding $(CFLAGS)
 
-$(KERNEL_ELF): $(OBJS)
+$(KERNEL_BIN): $(OBJS)
 	@mkdir -p $(@D) 
 	$(CC) -T kernel/arch/$(ARCH_TARGET)/linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
-
-$(KERNEL_BIN): $(KERNEL_ELF)
-	objcopy -O binary $^ $@

@@ -35,8 +35,8 @@ image: $(IMAGE)
 
 $(IMAGE): boot kernel
 	dd if=/dev/zero of=$(IMAGE) bs=512 count=32
-	dd if=$(BUILD_DIR)/boot.bin of=$(IMAGE) bs=512 conv=notrunc
-	dd if=$(BUILD_DIR)/kernel.elf of=$(IMAGE) bs=512 obs=512 seek=6 conv=notrunc
+	dd if=$(BUILD_DIR)/boot.sys of=$(IMAGE) bs=512 conv=notrunc
+	dd if=$(BUILD_DIR)/kernel.sys of=$(IMAGE) bs=512 obs=512 seek=6 conv=notrunc
 
 list-src:
 	@for src in $(SRCS) ; do \
@@ -48,11 +48,19 @@ list-obj:
 		echo $$obj; \
 	done
 
-run: $(IMAGE) all
-	qemu-system-i386.exe -monitor stdio -display sdl -boot c build/disk.img
+iso: all
+	@mkdir -p $(SYSROOT)/boot
+	@cp $(BOOTLOADER_BIN) $(SYSROOT)/boot/loader.sys
+	@cp $(KERNEL_BIN) $(SYSROOT)/kernel.sys
+	xorriso -as mkisofs -R -J -c boot/bootcat \
+		-b boot/loader.sys -no-emul-boot -boot-load-size 4 -boot-info-table \
+      	-o ./bootable.iso ./sysroot
 
-debug: $(IMAGE) all
-	qemu-system-i386.exe -monitor stdio -display sdl -boot c build/disk.img -S -gdb tcp::26000
+run: iso
+	qemu-system-i386.exe -monitor stdio -display sdl -cdrom bootable.iso
+
+debug: iso
+	qemu-system-i386.exe -monitor stdio -display sdl -cdrom bootable.iso -S -gdb tcp::26000
 
 run-boot: $(IMAGE) all
 	qemu-system-i386.exe -monitor stdio -display sdl -boot c build/boot.bin
