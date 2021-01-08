@@ -4,7 +4,7 @@
  
 #include <kernel/tty.h>
 #include <kernel/kprintf.h>
-#include <kernel/memory.h>
+#include <kernel/boot_info.h>
 #include <kernel/keyboard.h>
 
 #include "gdt.h"
@@ -13,22 +13,19 @@
 #include "paging.h"
 #include "pit.h"
 
-extern void kernel_main(void);
+extern void kernel_main(boot_info_table_t *boot_info);
+
+static boot_info_table_t boot_info;
 
 void arch_main(uintptr_t mem_info) 
 {
 	terminal_initialize();
 	kprintf("Hello, arch World!\n");
-	uint32_t size = *((uint32_t*)mem_info);
-	mem_info += 0x0004;
-	while (size > 0) {
-		mmap_entry_t entry = (*((mmap_entry_t*)mem_info));
-		kprintf("base: %x%x ", entry.base_hi, entry.base_lo);
-		kprintf("length: %x%x ", entry.length_hi, entry.length_lo);
-		kprintf("type: %u\n", entry.type);
-		--size;
-		mem_info += sizeof(mmap_entry_t);
-	}
+
+	boot_info = (boot_info_table_t){
+		.num_mmap_entries = *((uint32_t*)mem_info), 
+		.mmap_entries = (mmap_entry_t*)(mem_info + 0x0004)
+	};
 
 	init_gdt();
 	kprintf("GDT initialized!\n");
@@ -41,5 +38,5 @@ void arch_main(uintptr_t mem_info)
 
 	asm volatile("sti");
 
-    kernel_main();
+    kernel_main(&boot_info);
 }
