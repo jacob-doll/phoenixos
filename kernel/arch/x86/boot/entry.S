@@ -60,6 +60,5 @@ _start:
 	push $0x5100
     call arch_main
 
-    cli
 1:  hlt
     jmp 1b
